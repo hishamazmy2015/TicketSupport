@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -25,10 +29,8 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    //    private final VerificationTokenRepository verificationTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    //    private final RefreshTokenService refreshTokenService;
     private final UserDetailsService userDetailsService;
 
     public void signup(RegisterRequest registerRequest) {
@@ -67,5 +69,11 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                 null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+//        if (authentication.isAuthenticated())
+//            authentication.getPrincipal().get
+        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        SimpleGrantedAuthority auth = authorities.stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("No user " +
+                "Found with username : " + username));
+        System.out.println("Auth ================= " + (auth.getAuthority()));
     }
 }

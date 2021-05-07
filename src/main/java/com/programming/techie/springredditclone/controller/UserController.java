@@ -2,14 +2,12 @@ package com.programming.techie.springredditclone.controller;
 
 import com.programming.techie.springredditclone.dto.UpdateUserName;
 import com.programming.techie.springredditclone.model.User;
+import com.programming.techie.springredditclone.service.AuthService;
 import com.programming.techie.springredditclone.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +18,7 @@ import static org.springframework.http.ResponseEntity.status;
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     /**
      * update User By firstName.
@@ -39,16 +38,16 @@ public class UserController {
      * List All Users .
      *
      * @Return FORBIDDEN in case of invalid Token.
-     * Should only Admin
+     * only Admin can Access
      */
-    @GetMapping("/api/users/list")
-    public ResponseEntity<List<User>> getAllUsers(/*@RequestHeader(name = "token") String token*/) {
-        try {
-//            getAuthorization(token);
-            return status(HttpStatus.OK).body(userService.getAllUsers());
-        } catch (Exception e) {
-            return status(HttpStatus.FORBIDDEN).body(null);
-        }
-    }
+//    @GetMapping("/api/users/list")
+//    public ResponseEntity<List<User>> getAllUsers(@RequestHeader(name = "Authorization") String token) {
+//        try {
+//            authService.getAuthorization(token);
+//            return status(HttpStatus.OK).body(userService.getAllUsers());
+//        } catch (Exception e) {
+//            return status(HttpStatus.FORBIDDEN).body("Please Fill the 'Authorization' header token with value");
+//        }
+//    }
 
 }

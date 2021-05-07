@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,6 @@ public class TicketController {
     private final UserDetailsService userDetailsService;
     private final AuthService authService;
 
-    @Autowired
-    private JwtProvider jwtProvider;
 
     /**
      * Add  Ticket.
@@ -36,7 +35,7 @@ public class TicketController {
      * @param ticket
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addTicket(/*@RequestHeader(name = "token") String token,*/ @RequestBody TicketRequest ticket) {
+    public ResponseEntity<String> addTicket(/*@RequestHeader(name = "Authorization") String token,*/ @RequestBody TicketRequest ticket) {
         if (ticket.getMessage() == null || ticket.getMessage().isEmpty())
             return status(HttpStatus.EXPECTATION_FAILED).body("Please Fill the 'message' with value");
         else
@@ -50,13 +49,14 @@ public class TicketController {
      * @param token
      */
     @GetMapping("/list")
-    public ResponseEntity<List<Ticket>> getAllTicket(@RequestHeader(name = "token") String token) {
-        try {
-            authService.getAuthorization(token);
-            return status(HttpStatus.OK).body(ticketService.getAllTickets());
-        } catch (Exception e) {
-            return status(HttpStatus.FORBIDDEN).body(null);
-        }
+//    @Secured(value = "admin")
+    public ResponseEntity<List<Ticket>> getAllTicket(@RequestHeader(name = "Authorization") String token) {
+//        try {
+        authService.getAuthorization(token);
+        return status(HttpStatus.OK).body(ticketService.getAllTickets());
+//        } catch (Exception e) {
+//            return status(HttpStatus.FORBIDDEN).body("you don't have Access");
+//        }
     }
 
 

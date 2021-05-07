@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         "Found with username : " + username));
 
         return new org.springframework.security
-                .core.userdetails.User(user.getEmail(), user.getPassword(),
+                .core.userdetails.User(user.getUsername(), user.getPassword(),
                 true, true, true,
                 true, getAuthorities(user.getRole()));
     }
