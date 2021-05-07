@@ -63,17 +63,15 @@ public class AuthService {
                 .build();
     }
 
-    public void getAuthorization(String token) {
+    public Boolean getAuthorization(String token) {
         String username = jwtProvider.getUsernameFromJwt(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                 null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-//        if (authentication.isAuthenticated())
-//            authentication.getPrincipal().get
         Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         SimpleGrantedAuthority auth = authorities.stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("No user " +
-                "Found with username : " + username));
-        System.out.println("Auth ================= " + (auth.getAuthority()));
+                "Not Found : " + username));
+        return auth.getAuthority().equals("admin");
     }
 }

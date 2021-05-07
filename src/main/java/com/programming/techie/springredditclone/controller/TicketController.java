@@ -51,12 +51,10 @@ public class TicketController {
     @GetMapping("/list")
 //    @Secured(value = "admin")
     public ResponseEntity<List<Ticket>> getAllTicket(@RequestHeader(name = "Authorization") String token) {
-//        try {
-        authService.getAuthorization(token);
-        return status(HttpStatus.OK).body(ticketService.getAllTickets());
-//        } catch (Exception e) {
-//            return status(HttpStatus.FORBIDDEN).body("you don't have Access");
-//        }
+        if (authService.getAuthorization(token))
+            return status(HttpStatus.OK).body(ticketService.getAllTickets());
+        else
+            return status(HttpStatus.FORBIDDEN).body(null);
     }
 
 
